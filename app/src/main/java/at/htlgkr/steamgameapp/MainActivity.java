@@ -1,6 +1,7 @@
 package at.htlgkr.steamgameapp;
 
 import android.content.DialogInterface;
+import android.content.res.AssetManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,10 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +34,7 @@ import at.htlgkr.steam.ReportType;
 import at.htlgkr.steam.SteamBackend;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "game";
     private static final String GAMES_CSV = "games.csv";
 
     @Override
@@ -45,23 +49,29 @@ public class MainActivity extends AppCompatActivity {
         setUpSaveButton();
     }
 
-    private void loadGamesIntoListView() {
+    private void loadGamesIntoListView() throws IOException {
         // Implementieren Sie diese Methode.
+        SteamBackend backend = new SteamBackend();
+        List<Game> gameList = backend.getGames();
+        AssetManager assets = getAssets();
+        InputStream inputStream = assets.open(GAMES_CSV);
+
+        backend.loadGames(inputStream);
     }
 
-    private void setUpReportSelection() {
-        // Implementieren Sie diese Methode.
-    }
+        private void setUpReportSelection () {
+            // Implementieren Sie diese Methode.
+        }
 
-    private void setUpSearchButton() {
-        // Implementieren Sie diese Methode.
-    }
+        private void setUpSearchButton () {
+            // Implementieren Sie diese Methode.
+        }
 
-    private void setUpAddGameButton() {
-        // Implementieren Sie diese Methode.
-    }
+        private void setUpAddGameButton () {
+            // Implementieren Sie diese Methode.
+        }
 
-    private void setUpSaveButton() {
-        // Implementieren Sie diese Methode.
+        private void setUpSaveButton () {
+            // Implementieren Sie diese Methode.
+        }
     }
-}

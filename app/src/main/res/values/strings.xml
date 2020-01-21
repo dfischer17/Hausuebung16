@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">SteamGameApp</string>
+    <string name="addText">ADD GAME</string>
+    <string name="saveText">SAVE</string>
+    <string name="searchText">SEARCH</string>
 </resources>

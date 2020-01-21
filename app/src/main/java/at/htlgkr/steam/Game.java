@@ -1,9 +1,12 @@
 package at.htlgkr.steam;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class Game {
     public static final String DATE_FORMAT = "dd.MM.yyyy";
+    public static final SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
 
     private String name;
     private Date releaseDate;
@@ -13,49 +16,65 @@ public class Game {
         // dieser Konstruktor muss existieren
     }
 
+    public Game(String name, Date releaseDate, double price) {
+        this.name = name;
+        this.releaseDate = releaseDate;
+        this.price = price;
+    }
+
     public String getName() {
-        // Implementieren Sie diese Methode
-        return null;
+        return name;
     }
 
     public void setName(String name) {
         // Implementieren Sie diese Methode
+        this.name = name;
     }
 
     public Date getReleaseDate() {
         // Implementieren Sie diese Methode
-        return null;
+        return releaseDate;
     }
 
     public void setReleaseDate(Date releaseDate) {
         // Implementieren Sie diese Methode
+        this.releaseDate = releaseDate;
     }
 
     public double getPrice() {
         // Implementieren Sie diese Methode
-        return -1;
+        return price;
     }
 
     public void setPrice(double price) {
         // Implementieren Sie diese Methode
+        this.price = price;
     }
 
     @Override
     public String toString() {
         // Implementieren Sie diese Methode
-        return null;
+        String formattedReleaseDate = dateFormatter.format(releaseDate);
+        return "[" + formattedReleaseDate + "]" + name + price;
+    }
+
+    public String toCsvString() {
+        // Implementieren Sie diese Methode
+        String formattedReleaseDate = dateFormatter.format(releaseDate);
+        return name + ";" + formattedReleaseDate + ";" + price;
     }
 
     @Override
     public boolean equals(Object o) {
-        // Implementieren Sie diese Methode
-        return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return name.equals(game.name);
     }
 
     @Override
     public int hashCode() {
-        // Implementieren Sie diese Methode
-        return -1;
+        return Objects.hash(name);
     }
 }
 
