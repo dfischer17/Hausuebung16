@@ -34,7 +34,15 @@ public class SteamBackend {
             BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             StringBuffer buffer = new StringBuffer();
+
+            // Tabellenueberschriften ueberspringen
+            boolean read = false;
+
             while ((line = in.readLine()) != null) {
+                if (read == false) {
+                    read = true;
+                    continue;
+                }
                 String[] temp = line.split(";");
                 String name = temp[0];
                 Date date = Game.dateFormatter.parse(temp[1]);
@@ -92,7 +100,7 @@ public class SteamBackend {
 
     public double averageGamePrice() {
         // Implementieren Sie diese Methode mit Streams.
-        return gameList.stream().mapToDouble(Game::getPrice).average().getAsDouble();
+        return gameList.stream().mapToDouble(Game::getPrice).average().orElse(0);
     }
 
     public List<Game> getUniqueGames() {

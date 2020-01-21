@@ -36,6 +36,10 @@ public class Game {
         return releaseDate;
     }
 
+    public String getFormattedReleaseDate() {
+        return dateFormatter.format(releaseDate);
+    }
+
     public void setReleaseDate(Date releaseDate) {
         // Implementieren Sie diese Methode
         this.releaseDate = releaseDate;

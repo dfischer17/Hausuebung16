@@ -46,13 +46,15 @@ public class GameAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View givenView, ViewGroup parent) {
-        //Implementieren Sie diese Methode;
-        Game game = gameList.get(position);
-        View listItem = (givenView == null) ? inflator.inflate(this.layoutId, null) : givenView;
-        ((TextView) givenView.findViewById(R.id.title)).setText(String.valueOf(game.getPrice()));
-        ((TextView) givenView.findViewById(R.id.date)).setText(game.getName());
-        ((TextView) givenView.findViewById(R.id.price)).setText(String.valueOf(game.getPrice()));
-        return givenView;
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        Game game = gameList.get(i);
+        View listItem = (view == null) ?
+                inflator.inflate(this.layoutId, null) : view;
+
+        ((TextView) listItem.findViewById(R.id.name)).setText(game.getName());
+        ((TextView) listItem.findViewById(R.id.date)).setText(game.getFormattedReleaseDate());
+        ((TextView) listItem.findViewById(R.id.price)).setText(String.valueOf(game.getPrice()));
+
+        return listItem;
     }
 }
