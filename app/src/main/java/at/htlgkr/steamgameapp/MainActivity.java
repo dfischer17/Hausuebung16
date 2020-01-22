@@ -2,6 +2,7 @@ package at.htlgkr.steamgameapp;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -72,110 +73,114 @@ public class MainActivity extends AppCompatActivity {
         listView.setTextFilterEnabled(true);
     }
 
-        private void setUpReportSelection () {
-            // Implementieren Sie diese Methode.
-            // spinner-item list
-            ReportTypeSpinnerItem spinnerItem = new ReportTypeSpinnerItem(ReportType.NONE, SteamGameAppConstants.SELECT_ONE_SPINNER_TEXT);
-            ReportTypeSpinnerItem spinnerItem2 = new ReportTypeSpinnerItem(ReportType.SUM_GAME_PRICES, SteamGameAppConstants.SUM_GAME_PRICES_SPINNER_TEXT);
-            ReportTypeSpinnerItem spinnerItem3 = new ReportTypeSpinnerItem(ReportType.AVERAGE_GAME_PRICES, SteamGameAppConstants.AVERAGE_GAME_PRICES_SPINNER_TEXT);
-            ReportTypeSpinnerItem spinnerItem4 = new ReportTypeSpinnerItem(ReportType.UNIQUE_GAMES, SteamGameAppConstants.UNIQUE_GAMES_SPINNER_TEXT);
-            ReportTypeSpinnerItem spinnerItem5 = new ReportTypeSpinnerItem(ReportType.MOST_EXPENSIVE_GAMES, SteamGameAppConstants.MOST_EXPENSIVE_GAMES_SPINNER_TEXT);
-            List<ReportTypeSpinnerItem> spinnerItems = Arrays.asList(spinnerItem, spinnerItem2, spinnerItem3, spinnerItem4, spinnerItem5);
+    private void setUpReportSelection() {
+        // Implementieren Sie diese Methode.
+        // spinner-item list
+        ReportTypeSpinnerItem spinnerItem = new ReportTypeSpinnerItem(ReportType.NONE, SteamGameAppConstants.SELECT_ONE_SPINNER_TEXT);
+        ReportTypeSpinnerItem spinnerItem2 = new ReportTypeSpinnerItem(ReportType.SUM_GAME_PRICES, SteamGameAppConstants.SUM_GAME_PRICES_SPINNER_TEXT);
+        ReportTypeSpinnerItem spinnerItem3 = new ReportTypeSpinnerItem(ReportType.AVERAGE_GAME_PRICES, SteamGameAppConstants.AVERAGE_GAME_PRICES_SPINNER_TEXT);
+        ReportTypeSpinnerItem spinnerItem4 = new ReportTypeSpinnerItem(ReportType.UNIQUE_GAMES, SteamGameAppConstants.UNIQUE_GAMES_SPINNER_TEXT);
+        ReportTypeSpinnerItem spinnerItem5 = new ReportTypeSpinnerItem(ReportType.MOST_EXPENSIVE_GAMES, SteamGameAppConstants.MOST_EXPENSIVE_GAMES_SPINNER_TEXT);
+        List<ReportTypeSpinnerItem> spinnerItems = Arrays.asList(spinnerItem, spinnerItem2, spinnerItem3, spinnerItem4, spinnerItem5);
 
-            // array-adapter fuer spinner
-            spinnerAdapter = new ArrayAdapter<ReportTypeSpinnerItem>(this, R.layout.support_simple_spinner_dropdown_item, spinnerItems);
+        // array-adapter fuer spinner
+        spinnerAdapter = new ArrayAdapter<ReportTypeSpinnerItem>(this, R.layout.support_simple_spinner_dropdown_item, spinnerItems);
 
-            // spinner referenzieren
-            Spinner spinner = findViewById(R.id.chooseReport);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        // spinner referenzieren
+        Spinner spinner = findViewById(R.id.chooseReport);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    switch (i) {
-                        case 1:
-                            showDialog(SteamGameAppConstants.ALL_PRICES_SUM + backend.sumGamePrices());
-                            break;
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                switch (i) {
+                    case 1:
+                        showDialog(SteamGameAppConstants.ALL_PRICES_SUM + backend.sumGamePrices());
+                        break;
 
-                        case 2:
-                            showDialog(SteamGameAppConstants.ALL_PRICES_AVERAGE + backend.averageGamePrice());
-                            break;
+                    case 2:
+                        showDialog(SteamGameAppConstants.ALL_PRICES_AVERAGE + backend.averageGamePrice());
+                        break;
 
-                        case 3:
-                            showDialog(SteamGameAppConstants.UNIQUE_GAMES_SPINNER_TEXT + backend.getUniqueGames().size());
-                            break;
+                    case 3:
+                        showDialog(SteamGameAppConstants.UNIQUE_GAMES_SPINNER_TEXT + backend.getUniqueGames().size());
+                        break;
 
-                        case 4:
-                            String topNGames = formatTopNGames(backend.selectTopNGamesDependingOnPrice(3));
-                            showDialog(SteamGameAppConstants.MOST_EXPENSIVE_GAMES + topNGames);
-                            break;
-                    }
+                    case 4:
+                        String topNGames = formatTopNGames(backend.selectTopNGamesDependingOnPrice(3));
+                        showDialog(SteamGameAppConstants.MOST_EXPENSIVE_GAMES + topNGames);
+                        break;
                 }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-
-                }
-            });
-
-            // spinnern und adapter verknuepfen
-            spinner.setAdapter(spinnerAdapter);
-        }
-
-        private void setUpSearchButton () {
-            // Implementieren Sie diese Methode.
-            Button saveButton = findViewById(R.id.save);
-            saveButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    View viewDialog = getLayoutInflater().inflate(R.layout.save_dialog_layout, null);
-                    GameFilter filter = new GameFilter(backend.getGames(), adapter);
-                    new AlertDialog.Builder(this, )
-                            .setView(viewDialog)
-                            .setTitle(SteamGameAppConstants.ENTER_SEARCH_TERM)
-                            .setPositiveButton("SEARCH", )
-                            .setNegativeButton("Abbrechen", null)
-                            .show();
-
-                }
-            });
-        }
-
-        private void setUpAddGameButton () {
-            // Implementieren Sie diese Methode.
-        }
-
-        private void setUpSaveButton () {
-            // Implementieren Sie diese Methode.
-        }
-
-        private void showDialog(String text) {
-            alert = new AlertDialog.Builder(this);
-            alert.setMessage(text);
-            alert.show();
-        }
-
-        private void showSaveDialog() {
-            alert = new AlertDialog.Builder(this);
-            alert.setTitle(SteamGameAppConstants.ENTER_SEARCH_TERM);
-            alert.setMessage();
-            alert.show();
-        }
-
-        private String formatTopNGames(List<Game> mostExpensiveGames) {
-            String output = "";
-            StringBuilder builder = new StringBuilder(output);
-
-            for (Game curGame : mostExpensiveGames) {
-                builder.append(curGame.getName());
-                builder.append("\n");
             }
 
-            // TODO STIMMT UMGANG MIT BUILDER?
-            return builder.toString();
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        // spinnern und adapter verknuepfen
+        spinner.setAdapter(spinnerAdapter);
+    }
+
+    private void setUpSearchButton() {
+        // Implementieren Sie diese Methode.
+        Button saveButton = findViewById(R.id.save);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View viewDialog = getLayoutInflater().inflate(R.layout.save_dialog_layout, null);
+                GameFilter filter = new GameFilter(backend.getGames(), adapter);
+
+                showSaveDialog();
+            }
+        });
+    }
+
+    private void setUpAddGameButton() {
+        // Implementieren Sie diese Methode.
+    }
+
+    private void setUpSaveButton() {
+        // Implementieren Sie diese Methode.
+    }
+
+    private void showDialog(String text) {
+        alert = new AlertDialog.Builder(this);
+        alert.setMessage(text);
+        alert.show();
+    }
+
+    private void showSaveDialog() {
+        new AlertDialog.Builder(this)
+                //.setView(viewDialog)
+                .setTitle(SteamGameAppConstants.ENTER_SEARCH_TERM)
+                .setPositiveButton("SEARCH", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showSaveDialog();
+                    }
+
+                })
+                .setNegativeButton("Abbrechen", null)
+                .show();
+    }
+
+    private String formatTopNGames(List<Game> mostExpensiveGames) {
+        String output = "";
+        StringBuilder builder = new StringBuilder(output);
+
+        for (Game curGame : mostExpensiveGames) {
+            builder.append(curGame.getName());
+            builder.append("\n");
         }
 
-        private Filter search(String searched) {
-            GameFilter filter = new GameFilter(backend.getGames(), adapter);
-            return filter.performFiltering(searched);
-        }
+        // TODO STIMMT UMGANG MIT BUILDER?
+        return builder.toString();
     }
+
+    private Filter search(String searched) {
+        GameFilter filter = new GameFilter(backend.getGames(), adapter);
+        return null;
+    }
+}
