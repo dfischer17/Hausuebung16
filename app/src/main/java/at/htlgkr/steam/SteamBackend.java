@@ -66,13 +66,14 @@ public class SteamBackend {
 
         // Jedes Game mit toCsvString in File speichern
         for (Game curGame : gameList) {
-            outputBuilder.append(curGame.toCsvString());
+            String csvGame = curGame.toCsvString() + "\n";
+            outputBuilder.append(csvGame);
         }
 
-        output = output.toString();
+        output = outputBuilder.toString();
 
         PrintWriter out = new PrintWriter(new OutputStreamWriter(fileOutputStream));
-        out.println(output);
+        out.print(output);
         out.flush();
         out.close();
     }

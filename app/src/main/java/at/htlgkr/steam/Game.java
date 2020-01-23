@@ -1,5 +1,6 @@
 package at.htlgkr.steam;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -7,6 +8,7 @@ import java.util.Objects;
 public class Game {
     public static final String DATE_FORMAT = "dd.MM.yyyy";
     public static final SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+    private static final DecimalFormat priceFormatter = new DecimalFormat("0.0#");
 
     private String name;
     private Date releaseDate;
@@ -59,13 +61,14 @@ public class Game {
     public String toString() {
         // Implementieren Sie diese Methode
         String formattedReleaseDate = dateFormatter.format(releaseDate);
-        return "[" + formattedReleaseDate + "]" + name + price;
+        return "[" + formattedReleaseDate + "] " + name + " " + price;
     }
 
     public String toCsvString() {
         // Implementieren Sie diese Methode
         String formattedReleaseDate = dateFormatter.format(releaseDate);
-        return name + ";" + formattedReleaseDate + ";" + price;
+        String formattedPrice = priceFormatter.format(price);
+        return name + ";" + formattedReleaseDate + ";" + formattedPrice;
     }
 
     @Override

@@ -78,7 +78,7 @@ public class PojoTest {
         steamBackend.store(outputTest);
 
         String actual = new String(outputTest.toByteArray());
-
+        String expected = GameDataCsvString.ALL_DATA_5;
         assertEquals(GameDataCsvString.ALL_DATA_5, actual);
     }
 
