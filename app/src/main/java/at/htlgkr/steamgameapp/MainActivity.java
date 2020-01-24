@@ -10,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -90,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         // array-adapter fuer spinner
         spinnerAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, spinnerItems);
 
-        // spinner referenzieren
+        // spinner referenzieren und Listener implementieren
         Spinner spinner = findViewById(R.id.chooseReport);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -106,12 +105,13 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 3:
-                        showReportDialog(spinnerAdapter.getItem(i).getDisplayText(), SteamGameAppConstants.UNIQUE_GAMES_SPINNER_TEXT + backend.getUniqueGames().size());
+                        String message = SteamGameAppConstants.UNIQUE_GAMES_COUNT + backend.getUniqueGames().size();
+                        showReportDialog(spinnerAdapter.getItem(i).getDisplayText(), message);
                         break;
 
                     case 4:
-                        String topNGames = formatTopNGames(backend.selectTopNGamesDependingOnPrice(3));
-                        showReportDialog(spinnerAdapter.getItem(i).getDisplayText(), SteamGameAppConstants.MOST_EXPENSIVE_GAMES + topNGames);
+                        String topNGames = formatMostExpensiveGames(backend.selectTopNGamesDependingOnPrice(3));
+                        showReportDialog(spinnerAdapter.getItem(i).getDisplayText(), topNGames);
                         break;
                 }
             }
@@ -177,31 +177,16 @@ public class MainActivity extends AppCompatActivity {
         final View vDialog = getLayoutInflater().inflate(R.layout.search_dialog_layout, null);
         new AlertDialog.Builder(this)
                 .setView(vDialog)
-                .setTitle(SteamGameAppConstants.ENTER_SEARCH_TERM)
-                .setPositiveButton("SEARCH", new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        showSearchDialog();
-                    }
-
-                })
+                .setTitle(SteamGameAppConstants.ENTER_SEARCH_TERM) // TODO notwendig?
+                .setPositiveButton("SEARCH", (dialog, which) -> handleSearchDialog(vDialog))
                 .setNegativeButton("Abbrechen", null)
                 .show();
     }
 
     private void showAddGameDialog() {
         final View vDialog = getLayoutInflater().inflate(R.layout.add_dialog_layout, null);
-        EditText text = new EditText(this);
-        text.setId(R.id.dialog_name_field);
-
-        EditText text2 = new EditText(this);
-        text.setId(R.id.dialog_date_field);
-
-        EditText text3 = new EditText(this);
-        text.setId(R.id.dialog_price_field);
-
         new AlertDialog.Builder(this)
+                .setTitle(SteamGameAppConstants.NEW_GAME_DIALOG_TITLE)
                 .setView(vDialog)
                 .setPositiveButton("ADD GAME", (dialog, which) -> handleAddGameDialog(vDialog))
                 .setNegativeButton("CANCEL", null)
@@ -228,21 +213,25 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private String formatTopNGames(List<Game> mostExpensiveGames) {
-        String output = "";
+    private void handleSearchDialog(View vDialog) {
+        // Sucheeingabe des Nutzers einlesen
+        EditText searchView = vDialog.findViewById(R.id.dialog_search_field);
+        String searched = searchView.getText().toString();
+
+        // Nach Sucheingabe filtern
+        adapter.getFilter().filter(searched);
+    }
+
+    private String formatMostExpensiveGames(List<Game> mostExpensiveGames) {
+        String output = SteamGameAppConstants.MOST_EXPENSIVE_GAMES;
         StringBuilder builder = new StringBuilder(output);
 
         for (Game curGame : mostExpensiveGames) {
-            builder.append(curGame.getName());
+            builder.append(curGame.toString());
             builder.append("\n");
         }
 
         // TODO STIMMT UMGANG MIT BUILDER?
         return builder.toString();
-    }
-
-    private Filter search(String searched) {
-        GameFilter filter = new GameFilter(backend.getGames(), adapter);
-        return null;
     }
 }
